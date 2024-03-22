@@ -39,7 +39,7 @@ if chat:
             with st.chat_message("assistant"):
                 for chunk in chat.stream(st.session_state["messages"]):
                     ai_message = ai_message + chunk.content
-                    st.markdown(ai_message)
+                    st.markdown(chunk.content)
 
             st.session_state["messages"].append(AIMessage(content=ai_message))
 
