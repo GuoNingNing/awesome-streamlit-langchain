@@ -2,8 +2,7 @@ import streamlit as st
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import (
     AIMessage,
-    HumanMessage,
-    SystemMessage
+    HumanMessage
 )
 
 # Initialize the ChatOpenAI object
@@ -23,6 +22,9 @@ if chat:
     with st.container():
         st.header("Chat with GPT")
 
+        # 创建一个空元素用于流式呈现AI输出内容
+        ai_output = st.empty()
+
         for message in st.session_state["messages"]:
             if isinstance(message, HumanMessage):
                 with st.chat_message("user"):
@@ -30,15 +32,22 @@ if chat:
             elif isinstance(message, AIMessage):
                 with st.chat_message("assistant"):
                     st.markdown(message.content)
+
         prompt = st.chat_input("Type something...")
         if prompt:
             st.session_state["messages"].append(HumanMessage(content=prompt))
             with st.chat_message("user"):
                 st.markdown(prompt)
-            ai_message = chat(st.session_state["messages"])
-            st.session_state["messages"].append(ai_message)
+
+            ai_message = AIMessage()
+            # 更新空元素中的内容，实现流式呈现
             with st.chat_message("assistant"):
-                st.markdown(ai_message.content)
+                for chunk in chat.stream(st.session_state["messages"]):
+                    ai_message = ai_message + chunk
+                    ai_output.markdown(chunk.content)
+
+            st.session_state["messages"].append(ai_message)
+
 else:
     with st.container():
         st.warning("Please set your OpenAI API key in the settings page.")
