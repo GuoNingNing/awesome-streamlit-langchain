@@ -2,7 +2,8 @@ import streamlit as st
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import (
     AIMessage,
-    HumanMessage
+    HumanMessage,
+    SystemMessage
 )
 
 # Initialize the ChatOpenAI object
@@ -16,34 +17,47 @@ elif st.session_state["OPENAI_API_KEY"] != "":
 st.set_page_config(page_title="Welcome to ASL", layout="wide")
 
 if "messages" not in st.session_state:
-    st.session_state["messages"] = []
+    st.session_state["messages"] = [SystemMessage(content="你是无所不能的罗伯特，请问我任何你想提问的问题")]
 
-if chat:
-    with st.container():
-        for message in st.session_state["messages"]:
-            if isinstance(message, HumanMessage):
-                with st.chat_message("user"):
-                    st.markdown(message.content)
-            elif isinstance(message, AIMessage):
-                with st.chat_message("assistant"):
-                    st.markdown(message.content)
 
+def show_messages():
+    print("show_messages")
+    for message in st.session_state["messages"]:
+        if isinstance(message, HumanMessage):
+            with st.chat_message("user"):
+                st.markdown(message.content)
+        elif isinstance(message, AIMessage):
+            with st.chat_message("assistant"):
+                st.markdown(message.content)
+        elif isinstance(message, SystemMessage):
+            with st.chat_message("system"):
+                st.markdown(message.content)
+
+
+def ask(prompt):
+    st.session_state["messages"].append(HumanMessage(content=prompt))
+    msg = ""
+    # for chunk in chat.stream(st.session_state["messages"]):
+    #     msg += chunk.content
+    #     # yield chunk.content
+    return chat.invoke(st.session_state["messages"])
+
+
+def main():
+    with st.container(height=600):
+        show_messages()
+        assistant = st.empty()
+        ai = st.empty()
+
+    with st.container(height=80):
         prompt = st.chat_input("Type something...")
         if prompt:
-            st.session_state["messages"].append(HumanMessage(content=prompt))
-            with st.chat_message("user"):
-                st.markdown(prompt)
-
-            ai_message = ""
             # 更新空元素中的内容，实现流式呈现
-            with st.chat_message("assistant"):
-                def stream_data():
-                    for chunk in chat.stream(st.session_state["messages"]):
-                        yield chunk.content
+            assistant.chat_message('user').write(prompt)
+            ai.chat_message('assistant').write("思考中....")
+            ai_messages = ask(prompt)
+            st.session_state["messages"].append(AIMessage(content=ai_messages))
 
-                st.write_stream(stream_data())
-            st.session_state["messages"].append(AIMessage(content=ai_message))
 
-else:
-    with st.container():
-        st.warning("Please set your OpenAI API key in the settings page.")
+if __name__ == '__main__':
+    main()
