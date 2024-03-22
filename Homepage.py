@@ -37,10 +37,11 @@ if chat:
             ai_message = ""
             # 更新空元素中的内容，实现流式呈现
             with st.chat_message("assistant"):
-                for chunk in chat.stream(st.session_state["messages"]):
-                    ai_message = ai_message + chunk.content
-                    st.write_stream(chunk.content)
+                def stream_data():
+                    for chunk in chat.stream(st.session_state["messages"]):
+                        yield chunk
 
+                st.write_stream(stream_data())
             st.session_state["messages"].append(AIMessage(content=ai_message))
 
 else:
