@@ -56,7 +56,7 @@ def main():
             assistant.chat_message('user').write(prompt)
             ai.chat_message('assistant').write("思考中....")
             ai_messages = ask(prompt)
-            st.session_state["messages"].append(AIMessage(content=ai_messages))
+            st.session_state["messages"].append(ai_messages)
 
 
 if __name__ == '__main__':
