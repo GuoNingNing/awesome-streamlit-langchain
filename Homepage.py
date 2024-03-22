@@ -20,9 +20,6 @@ if "messages" not in st.session_state:
 
 if chat:
     with st.container():
-        # 创建一个空元素用于流式呈现AI输出内容
-        ai_output = st.empty()
-
         for message in st.session_state["messages"]:
             if isinstance(message, HumanMessage):
                 with st.chat_message("user"):
@@ -42,7 +39,7 @@ if chat:
             with st.chat_message("assistant"):
                 for chunk in chat.stream(st.session_state["messages"]):
                     ai_message = ai_message + chunk.content
-                    ai_output.markdown(ai_message)
+                    st.markdown(ai_message)
 
             st.session_state["messages"].append(AIMessage(content=ai_message))
 
