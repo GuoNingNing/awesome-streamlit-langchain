@@ -16,8 +16,13 @@ elif st.session_state["OPENAI_API_KEY"] != "":
 
 st.set_page_config(page_title="哇卡玛咖", layout="wide")
 
+
+def init():
+    st.session_state["messages"] = []
+
+
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [SystemMessage(content="你是无所不能的罗伯特，请问我任何你想提问的问题")]
+    init()
 
 
 def show_messages():
@@ -44,7 +49,7 @@ def ask(prompt):
 
 
 def main():
-    with st.container(height=720, border=False):
+    with st.container(height=680, border=False):
         show_messages()
         user = st.empty()
         ai = st.empty()
@@ -52,10 +57,14 @@ def main():
     with st.container(height=80, border=False):
         prompt = st.chat_input("键入内容...")
         if prompt:
-            # 更新空元素中的内容，实现流式呈现
-            user.chat_message('user').write(prompt)
-            ai.chat_message('assistant').write("思考中....")
-            ai.chat_message('assistant').write_stream(ask(prompt))
+
+            if prompt == '#清除':
+                init()
+            else:
+                # 更新空元素中的内容，实现流式呈现
+                user.chat_message('user').write(prompt)
+                ai.chat_message('assistant').write("思考中....")
+                ai.chat_message('assistant').write_stream(ask(prompt))
 
 
 if __name__ == '__main__':
