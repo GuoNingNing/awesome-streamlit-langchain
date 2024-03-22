@@ -20,8 +20,6 @@ if "messages" not in st.session_state:
 
 if chat:
     with st.container():
-        st.header("Chat with GPT")
-
         # 创建一个空元素用于流式呈现AI输出内容
         ai_output = st.empty()
 
@@ -39,7 +37,7 @@ if chat:
             with st.chat_message("user"):
                 st.markdown(prompt)
 
-            ai_message = AIMessage()
+            ai_message = AIMessage(content="")
             # 更新空元素中的内容，实现流式呈现
             with st.chat_message("assistant"):
                 for chunk in chat.stream(st.session_state["messages"]):
