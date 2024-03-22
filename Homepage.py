@@ -37,14 +37,14 @@ if chat:
             with st.chat_message("user"):
                 st.markdown(prompt)
 
-            ai_message = AIMessage(content="")
+            ai_message = ""
             # 更新空元素中的内容，实现流式呈现
             with st.chat_message("assistant"):
                 for chunk in chat.stream(st.session_state["messages"]):
-                    ai_message = ai_message + chunk
-                    ai_output.markdown(ai_message.content)
+                    ai_message = ai_message + chunk.content
+                    ai_output.markdown(ai_message)
 
-            st.session_state["messages"].append(ai_message)
+            st.session_state["messages"].append(AIMessage(content=ai_message))
 
 else:
     with st.container():
