@@ -36,11 +36,11 @@ def show_messages():
 
 def ask(prompt):
     st.session_state["messages"].append(HumanMessage(content=prompt))
-    msg = ""
-    # for chunk in chat.stream(st.session_state["messages"]):
-    #     msg += chunk.content
-    #     # yield chunk.content
-    return chat.invoke(st.session_state["messages"])
+    ai_messages = ""
+    for chunk in chat.stream(st.session_state["messages"]):
+        ai_messages += chunk.content
+        yield chunk.content
+    st.session_state["messages"].append(AIMessage(content=ai_messages))
 
 
 def main():
@@ -55,9 +55,7 @@ def main():
             # 更新空元素中的内容，实现流式呈现
             assistant.chat_message('user').write(prompt)
             ai.chat_message('assistant').write("思考中....")
-            ai_messages = ask(prompt)
-            st.session_state["messages"].append(ai_messages)
-            ai.chat_message("assistant").write(ai_messages.content)
+            ai.chat_message('assistant').write_stream(ask(prompt))
 
 
 if __name__ == '__main__':
