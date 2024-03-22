@@ -19,8 +19,8 @@ if saved:
     st.write(f'用户输入的数据为: {openai_api_key}')
 
     # 执行JavaScript代码将数据保存到LocalStorage
-    st.write(f'<script>localStorage.setItem("OPENAI_API_KEY", "{openai_api_key}")</script>')
+    st.markdown(f'<script>localStorage.setItem("OPENAI_API_KEY", "{openai_api_key}")</script>', unsafe_allow_html=True)
 
     # 在页面上显示从LocalStorage中读取的数据
-    stored_data = st.write('<script>localStorage.getItem("OPENAI_API_KEY")</script>')
+    stored_data = st.markdown('<script>localStorage.getItem("OPENAI_API_KEY")</script>', unsafe_allow_html=True)
     st.write(stored_data)
