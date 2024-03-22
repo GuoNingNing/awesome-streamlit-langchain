@@ -39,7 +39,7 @@ if chat:
             with st.chat_message("assistant"):
                 def stream_data():
                     for chunk in chat.stream(st.session_state["messages"]):
-                        yield chunk
+                        yield chunk.content
 
                 st.write_stream(stream_data())
             st.session_state["messages"].append(AIMessage(content=ai_message))
