@@ -7,17 +7,18 @@ from langchain.schema import (
 )
 
 # Initialize the ChatOpenAI object
-chat = None
 
-if "OPENAI_API_KEY" not in st.session_state:
-    st.session_state["OPENAI_API_KEY"] = ""
-elif st.session_state["OPENAI_API_KEY"] != "":
-    chat = ChatOpenAI(openai_api_key=st.session_state["OPENAI_API_KEY"])
+openai_api_key = st.query_params["key"]
 
-st.set_page_config(page_title="哇卡玛咖", layout="wide")
+if openai_api_key is None:
+    st.error("请输入openai_api_key")
+
+else:
+    chat = ChatOpenAI(openai_api_key=st.query_params["key"])
 
 
 def init():
+    st.set_page_config(page_title="哇卡玛咖", layout="wide")
     st.session_state["messages"] = []
 
 
@@ -26,7 +27,6 @@ if "messages" not in st.session_state:
 
 
 def show_messages():
-    print("show_messages")
     for message in st.session_state["messages"]:
         if isinstance(message, HumanMessage):
             with st.chat_message("user"):
