@@ -14,7 +14,8 @@ if openai_api_key is None:
     st.error("请输入openai_api_key")
 
 else:
-    chat = ChatOpenAI(openai_api_key=st.query_params["key"])
+    print(openai_api_key)
+    chat = ChatOpenAI(openai_api_key=openai_api_key)
 
 
 def init():
