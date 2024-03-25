@@ -6,12 +6,15 @@ from langchain.schema import (
     SystemMessage
 )
 st.set_page_config(page_title="哇卡玛咖", layout="wide")
+chat = None
 # Initialize the ChatOpenAI object
 if "key" not in st.query_params:
     st.error("请输入openai_api_key")
 
 else:
-    chat = ChatOpenAI(openai_api_key=st.query_params["key"])
+    if chat is None:
+        print("初始化OpenAi")
+        chat = ChatOpenAI(openai_api_key=st.query_params["key"])
 
 
 def init():
