@@ -8,7 +8,7 @@ from langchain.schema import (
 
 # Initialize the ChatOpenAI object
 
-print(st.query_params.values())
+print("st.query_params.values()", st.query_params.values())
 openai_api_key = st.query_params["key"]
 
 if openai_api_key is None:
