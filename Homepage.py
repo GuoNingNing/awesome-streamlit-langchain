@@ -9,7 +9,7 @@ from langchain.schema import (
 # Initialize the ChatOpenAI object
 
 openai_api_key = st.query_params["key"]
-
+print(st.query_params.values())
 if openai_api_key is None:
     st.error("请输入openai_api_key")
 
