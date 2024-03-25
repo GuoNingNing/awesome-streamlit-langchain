@@ -5,22 +5,17 @@ from langchain.schema import (
     HumanMessage,
     SystemMessage
 )
-
+st.set_page_config(page_title="哇卡玛咖", layout="wide")
 # Initialize the ChatOpenAI object
-
-print("st.query_params.values()", st.query_params.values())
-openai_api_key = st.query_params["key"]
-
-if openai_api_key is None:
+if "key" not in st.query_params:
     st.error("请输入openai_api_key")
 
 else:
-    print(openai_api_key)
-    chat = ChatOpenAI(openai_api_key=openai_api_key)
+    chat = ChatOpenAI(openai_api_key=st.query_params["key"])
 
 
 def init():
-    st.set_page_config(page_title="哇卡玛咖", layout="wide")
+
     st.session_state["messages"] = []
 
 
