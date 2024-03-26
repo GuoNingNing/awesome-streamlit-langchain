@@ -14,7 +14,9 @@ if "key" not in st.query_params:
 else:
     if chat is None:
         print("初始化OpenAi")
-        chat = ChatOpenAI(openai_api_key=st.query_params["key"])
+        chat = ChatOpenAI(openai_api_key=st.query_params["key"],
+                          model_name="gpt-3.5-turbo-instruct-0914"
+                          )
 
 
 def init():
